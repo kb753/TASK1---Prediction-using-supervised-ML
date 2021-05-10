@@ -1,0 +1,56 @@
+# simple Regression
+
+# importing file
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+
+# loading dataset
+
+data=pd.read_csv("http://bit.ly/w-data")
+data
+
+# Now we find correlation before establish linear relation between two variable.
+data.corr()
+
+plt.title(" Hours studied VS Marks obtained")
+plt.xlabel("Numbers of study hours")
+plt.ylabel("Score Obtained")
+plt.scatter(data.Hours,data.Scores,color='Blue',label='Data Points')
+plt.legend(['Data Points'])
+
+# Now we have split our data into training and testing sets.
+# Training the dataset
+
+LR = linear_model.LinearRegression()
+LR.fit(data[['Hours']],data.Scores)
+m = LR.coef_
+print(m)
+a = LR.intercept_
+print(a)
+
+# Now using the equation of linear Regression line which is Y = M*x + A
+
+Predicted_Score = data[['Hours']]*m + a
+
+plt.title("Prediction of Hours studied Vs percentage of score using Linear Regression")
+plt.xlabel("Number of study hours")
+plt.ylabel("score obtained")
+plt.scatter(data.Hours,data.Scores,color="blue", label = 'Data point')
+plt.plot(data.Hours,Predicted_Score,color="red", label = 'Linear Regression line')
+plt.legend(['linear Regression line','Data point'])
+
+# Testing the dataset on the given problem statemen
+
+def LR_Prediction(hour):
+    score = m*hour + a
+    return score
+    
+#Prediction
+
+Prediction = LR_Prediction(9.25)
+print("Given that the student studies 9.25 hour/day, the prediction of Score achieved is %.4f"%Prediction)
+
+from sklearn.metrics import mean_absolute_error
+print("Mean of Absolute Error:", mean_absolute_error(data.Scores,Predicted_Score))
